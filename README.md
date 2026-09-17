@@ -1,17 +1,16 @@
-# Erdős 396 — binomial divisibility witnesses
+# Erdős #396 — binomial divisibility witnesses
 
-This repository is the focused home for a computational/structural program around Erdős problem 396:
+For which `k` does there exist `n` such that
 
-> for which `k` does there exist `n` such that
-> `n(n-1)...(n-k)` divides `C(2n,n)`?
+\[
+n(n-1)\cdots(n-k)\mid {2n\choose n}?
+\]
 
-The core tool is Kummer's theorem: `v_p(C(2n,n))` equals the number of carries when adding `n+n` in base `p`. That turns the divisibility test into an exact prime-by-prime calculation.
+This repository gives exact finite witnesses and a Kummer-theoretic search for the problem.
 
-## Verified finite frontier
+## Least witnesses found below 60,000
 
-The recovered search establishes the following least witnesses:
-
-| k | least n | witnesses below 60,000 |
+| `k` | least `n` | witnesses below 60,000 |
 |---:|---:|---:|
 | 1 | 2 | 701 |
 | 2 | 2480 | 72 |
@@ -20,22 +19,35 @@ The recovered search establishes the following least witnesses:
 
 In particular,
 
-- `8178*8177*8176*8175 | C(16356,8178)`;
-- `45153*45152*45151*45150*45149 | C(90306,45153)`.
+\[
+8178\cdot8177\cdot8176\cdot8175\mid {16356\choose8178},
+\]
 
-All factors in those two consecutive blocks are composite. This matters because a historical nonexistence argument silently needed a prime in the short window `(n-k,n]`; its much larger stated prime interval does not supply the claimed negative valuation.
+and
 
-## Correction carried with the result
+\[
+45153\cdot45152\cdot45151\cdot45150\cdot45149\mid {90306\choose45153}.
+\]
 
-The source archive contained a `PROVED` row asserting a prime in `(2n/3,n]` forces the relevant valuation obstruction. The exact Kummer computation shows those primes can all have valuation zero. The obstruction only works when a prime occurs in the final `k+1` integers themselves.
+All factors in these two consecutive blocks are composite.
 
-The repository therefore preserves both the positive witnesses and the failed proof mechanism.
+## Method
+
+Kummer's theorem identifies
+
+\[
+v_p\!\left({2n\choose n}\right)
+\]
+
+with the number of carries in the base-`p` addition `n+n`. The verifier factors the consecutive block and checks the required `p`-adic inequalities prime by prime.
+
+The computation also exposes a failed historical obstruction: a prime in the much wider interval `(2n/3,n]` need not contribute the required negative valuation. The elementary obstruction works only when the relevant prime actually occurs in the final `k+1` factors.
 
 ## Files
 
-- [`ERDOS-396-WITNESS.md`](ERDOS-396-WITNESS.md) — full mathematical write-up recovered from the ore review.
-- [`erdos396_witness.py`](erdos396_witness.py) — exact Kummer-based search and verification program.
-- [`PROVENANCE.md`](PROVENANCE.md) — source locations and authority boundary.
+- [`ERDOS-396-WITNESS.md`](ERDOS-396-WITNESS.md) — mathematical write-up.
+- [`erdos396_witness.py`](erdos396_witness.py) — exact Kummer-based search and verifier.
+- [`PROVENANCE.md`](PROVENANCE.md) — source history.
 
 ## Reproduce
 
@@ -43,8 +55,6 @@ The repository therefore preserves both the positive witnesses and the failed pr
 python erdos396_witness.py
 ```
 
-The script uses `sympy` for exact factorization/primality. Finite search results are finite statements; this repository does not claim a general classification of all `k`.
+The script uses `sympy` for exact factorization and primality testing. The table is a finite result; no classification for all `k` is asserted.
 
-## Author
-
-Jared Wilder
+Author: Jared Wilder.
